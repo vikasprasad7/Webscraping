@@ -1,0 +1,44 @@
+from bs4 import BeautifulSoup
+import requests
+import os
+import shutil
+import pandas as pd
+import requests
+import urllib.request
+
+website = "https://en.wikipedia.org/wiki/List_of_PC_games_(A)"
+result = requests.get(website)
+
+result
+
+content = result.text
+soup = BeautifulSoup(content, 'html5lib')
+
+soup.find_all('table')
+
+b = soup.find('table/tbody/tr')
+c = soup.find_all('th')
+b1 = 1
+for c1 in c:
+    print(b1,c1.text)
+    b1 = b1+1
+
+d = soup.table.tbody.find_all('tr')
+b2 = 1
+for d1 in d:
+    print(b2,d1.text)
+    b2=b2+1
+
+name = []
+types = []
+systm = []
+b3 = 1
+for b3 in range(1,169):
+    e = soup.table.tbody.find_all('tr')[b3]
+    print(b3,e.find_all('td')[0].text)
+    name.append(e.find_all('td')[0].text)
+    print(b3,e.find_all('td')[3].text)
+    types.append(e.find_all('td')[3].text)
+    print(b3,e.find_all('td')[4].text)
+    systm.append(e.find_all('td')[4].text)
+

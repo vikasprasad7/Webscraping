@@ -1,0 +1,75 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException
+import pandas as pd
+import requests
+import urllib.request
+import os
+import shutil
+import time
+
+web = "https://www.oneflare.com.au/directory"
+path = "C:/Users/vikas/Downloads/chromedriver-win64/chromedriver-win64/chromedriver"
+driver = webdriver.Chrome(path)
+driver.get(web)
+
+name= []
+place = []
+hired = []
+
+a1 = driver.find_elements("xpath","//div/a[@class='Anchor__AnchorStyled-sc-15sqto0-0 cFeZCz Anchor sc-7de3ff1a-4 hOulfI']")
+b1 = 0
+for aa in a1:
+    time.sleep(2)
+    print(b1,aa.text)
+    aa.click()
+ 
+    a6 = driver.find_element("xpath","//p[@id='view-more-button']")
+    b2 = 0
+    for b2 in range(10):
+        try:
+            a6 = driver.find_element("xpath","//p[@id='view-more-button']")
+            driver.execute_script("arguments[0].scrollIntoView();",a6)
+            print(b2, a6.text)
+            b2 = b2+1
+        except Exception as e:
+            print(e)
+        try:
+            a6.click()
+        except Exception as e:
+            print(e)
+        #driver.execute_script("arguments[0].scrollIntoView();",af)
+        #print(b2, af.text)
+        #af.click()
+        #b2 = b2+1
+        time.sleep(1)
+    time.sleep(3)
+    a2 = driver.find_elements("xpath","//h3[@class='H3__H3Styled-sc-7dq3y5-0 iScmyS H3 LandscapeCardheaderstyles__CardTitle-sc-erhpzr-6 iZwfZF']/a")
+    for ab in a2:
+        print(ab.text)
+        if ab.text == '':
+            ab.text = 'null'
+        name.append(ab.text)
+    print(name)
+    a3 = driver.find_elements("xpath","//p[@class='Paragraph__ParagraphStyled-sc-3dsdwt-0 dUaVId Paragraph LandscapeCardheaderstyles__BusinessLocation-sc-erhpzr-8 gsutgV']")
+    for ac in a3:
+        print(ac.text)
+        if ac.text == '':
+            ac.text = 'null'
+        place.append(ac.text)
+    print(place)
+    a4 = driver.find_elements("xpath","//span[@class='AdditionalInformationstyles__ReviewCount-sc-5m818g-2 fk0XRy']/a[1]")
+    for ad in a4:
+        print(ad.text)
+    a5 = driver.find_elements("xpath","//span[@class='AdditionalInformationstyles__HireCount-sc-5m8i8g-4 dcVtBq']")
+    for ae in a5:
+        print(ae.text)
+        if ae.text == '':
+            ae.text = 'null'
+        hired.append(ae.text)
+    print(hired)
+    b1 = b1+1
+    driver.back()

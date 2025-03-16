@@ -1,0 +1,60 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException
+import pandas as pd
+import requests
+import urllib.request
+import os
+import shutil
+import time
+
+web = "https://nurserylive.com/collections/indoor-garden"
+web2 = "https://nurserylive.com/"
+path = "C:/Users/vikas/Downloads/chromedriver-win64/chromedriver-win64/chromedriver"
+driver = webdriver.Chrome(path)
+driver.get(web2)
+
+options = webdriver.ChromeOptions() 
+options.add_argument('--headless') 
+options.add_argument('--disable-gpu')
+
+img = []
+price = []
+item = []
+rating = []
+
+current_page = 1
+last_page = 4
+while current_page <= last_page:
+    d_name = driver.find_elements("xpath","//div[contains(@class, 'price__current price__current')]/span[contains(@class, 'money')]")
+    for d in d_name:
+        price.append(d.text)
+    print(price)
+    p_name = driver.find_elements("xpath","//h2[contains(@class, 'productitem--title')]")
+    for p in p_name:
+        item.append(p.text)
+    print(item)
+    rati = driver.find_elements("xpath","//div[contains(@class, 'jdgm-prev-badge')]")
+    for r in rati:
+        print("star rating ",r.get_attribute("data-average-rating"))
+        rating.append(r.text)
+    print(rating)
+    img = driver.find_elements("xpath","//img[contains(@class, 'productitem--image-primary')]")
+    a = 1
+    for i in img:
+        url = i.get_attribute("src")
+        response = requests.get(url, stream=True)
+        with open(f'{current_page}img{a}.png', 'wb') as out_file:#start notebook in the folder where to save images
+            shutil.copyfileobj(response.raw, out_file)
+        a = a+1
+        img.append(f'{current_page}img{a}.jpg')
+        if(a==18):
+            break
+    print(img)
+    break
+    current_page = current_page + 1

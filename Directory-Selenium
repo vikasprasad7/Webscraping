@@ -73,3 +73,5 @@ for aa in a1:
     print(hired)
     b1 = b1+1
     driver.back()
+
+driver.quit()

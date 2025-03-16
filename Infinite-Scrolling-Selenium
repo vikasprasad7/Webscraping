@@ -1,0 +1,60 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException
+import pandas as pd
+import requests
+import urllib.request
+import os
+import shutil
+import time
+
+web = "https://www.mehar.com/india/mens-trousers-pants?srsltid=AfmBOorflY8ZEgXiVcmWbmLuXRt_yEDhfPaOYmyOJjqYaJK8Jy_OeOq6"
+path = "C:/Users/vikas/Downloads/chromedriver-win64/chromedriver-win64/chromedriver"
+driver = webdriver.Chrome(path)
+driver.get(web)
+
+name = []
+review = []
+price = []
+off = []
+
+last_height = 0
+new_height = 1
+
+while last_height < new_height:
+    time.sleep(5)
+    a = driver.find_elements("xpath","//h2[@class='product-titile']")
+    b = 1
+    for aa in a:
+        name.append(aa.text)
+        b = b+1
+    print(name)
+    c = driver.find_elements("xpath","//button[@class='ReviewBtn btn text-start p-0']")
+    d = 1
+    for cc in c:
+        review.append(cc.text)
+        d = d+1
+    print(review)
+    e = driver.find_elements("xpath","//div[@class='action-title p-2 d-block position-relative bg-white']/strong")
+    f = 1
+    for ee in e:
+        price.append(ee.text)
+        f = f+1
+    print(price)
+    g = driver.find_elements("xpath","//div[@class='action-title p-2 d-block position-relative bg-white']/span[@class='product-offers-new']")
+    h = 1
+    for gg in g:
+        off.append(gg.text)
+        h = h+1
+    print(off)
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    print("last height = ", last_height)
+    #while True:
+    driver.execute_script("window.scrollTo(1, document.body.scrollHeight)")
+    #time.sleep(5)
+    new_height = driver.execute_script("return document.body.scrollHeight")
+    print("new height = ", new_height)
+    last_height = new_height

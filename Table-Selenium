@@ -1,0 +1,51 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException
+import pandas as pd
+import requests
+import urllib.request
+import os
+import shutil
+import time
+
+web = "https://en.wikipedia.org/wiki/List_of_PC_games_(A)"
+path = "C:/Users/vikas/Downloads/chromedriver-win64/chromedriver-win64/chromedriver"
+driver = webdriver.Chrome(path)
+driver.get(web)
+
+heading = []
+name = []
+genre = []
+oss = []
+
+a1 = driver.find_elements("xpath","//h1[@class='firstHeading mw-first-heading']")
+for aa in a1:
+    print(aa.text)
+
+a2 = driver.find_elements("xpath","//table/thead/tr/th")
+heading.append(a2[0].text)
+heading.append(a2[3].text)
+heading.append(a2[4].text)
+
+ai = driver.find_elements("xpath","//i")
+for aii in ai:
+    print(aii.text)
+    name.append(aii.text)
+
+a4 = driver.find_elements("xpath","//table/tbody/tr/td[4]")
+for ad in a4:
+    genre.append(ad.text)
+
+a5 = driver.find_elements("xpath","//table/tbody/tr/td[5]")
+for ae in a5:
+    oss.append(ae.text)
+
+driver.quit()
+
+df = pd.DataFrame.from_dict({'heading':heading,'game-name':name,'genre':genre,'operating system':oss},orient='index')
+df.transpose()
+df.to_csv('list of games with A.csv')
+
